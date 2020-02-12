@@ -16,12 +16,20 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+
+import org.springframework.data.annotation.Transient;
 
 
 @Entity // Declares class as entity which will be managed by JPA
 @Table(name="JPA_Employees")
-@EntityListeners({EmployeeListener.class}) // call the appropriate listener event method on the lifecycle
+@EntityListeners({EmployeeListener.class}) // call the appropriate listener event method on the life-cycle
+@NamedQueries({
+	@NamedQuery(name="Employee.findbySalary", query="select e from Employee e where e.salary between :minSalary and :maxSalary"),
+	@NamedQuery(name="Employee.findbyDesignation", query="select e from Employee e where e.designation=:designation")
+})
 public class Employee {
 	int empno;
 	String name; 
@@ -34,6 +42,7 @@ public class Employee {
 	
 	@ManyToOne // one employee is associated with one of the many departments 
 	@JoinColumn(name="fk_department_number")//fk to associate the depno
+	@Transient // ignore this property when storing employee data in mongodb 
 	public Department getCurrentDepartment() {
 		return currentDepartment;
 	}
@@ -51,6 +60,7 @@ public class Employee {
 						joinColumns= {@JoinColumn(name="fk_empno")},
 						inverseJoinColumns= {@JoinColumn(name="fk_projectId")}
 						)
+	@Transient
 	public Set<Project> getProjectsAssigned() {
 		return projectsAssigned;
 	}
