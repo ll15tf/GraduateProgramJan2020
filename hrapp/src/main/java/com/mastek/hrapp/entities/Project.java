@@ -10,13 +10,18 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
-
+import javax.ws.rs.FormParam;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
+@XmlRootElement
 @Entity
 @Table(name="JPA_Projects")
 public class Project {
 	
 	int projectID; 
-	String name; 
+	@FormParam("name")
+	String name;
+	@FormParam("customerName")
 	String customerName; 
 		
 	//////////////////////////////////////////////////////////////////////
@@ -24,6 +29,7 @@ public class Project {
 	Set<Employee> projectTeam = new HashSet<>();
 	
 	@ManyToMany(mappedBy="projectsAssigned")
+	@XmlTransient
 	public Set<Employee> getProjectTeam() {
 		return projectTeam;
 	}

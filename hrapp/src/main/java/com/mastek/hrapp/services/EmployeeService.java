@@ -9,6 +9,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.mastek.hrapp.apis.DepartmentAPI;
+import com.mastek.hrapp.apis.EmployeeAPI;
+import com.mastek.hrapp.apis.ProjectAPI;
 import com.mastek.hrapp.dao.DepartmentDAO;
 import com.mastek.hrapp.dao.EmployeeJPADAO;
 import com.mastek.hrapp.dao.JobPositionDAO;
@@ -20,7 +23,7 @@ import com.mastek.hrapp.entities.Project;
 
 @Component
 @Scope("singleton")
-public class EmployeeService {
+public class EmployeeService implements EmployeeAPI, DepartmentAPI, ProjectAPI{
 	
 	String exampleProperty;
 	
@@ -100,6 +103,51 @@ public JobPosition applyForJobPosition (int jobId, int empno) {
 	job = jobsDAO.save(job); 
 	return job; 
 }
+	@Override
+	public Iterable<Employee> listAllEmployees() {
+		System.out.println("listing all employees");
+		return empDAO.findAll();
+}
+	@Override
+	public Employee findByEmpno(int empno) {
+		return empDAO.findById(empno).get();
+	}
+	
+	@Override
+	public Employee registerNewEmployee(Employee newEmployee) {
+		newEmployee = empDAO.save(newEmployee);
+		return newEmployee;
+	}
+	@Override
+	public Iterable<Project> listAllProjects() {
+		System.out.println("listing all departments");
+		return proDAO.findAll();
+	}
+	@Override
+	public Project findByProjectID(int projectID) {
+		// TODO Auto-generated method stub
+		return proDAO.findById(projectID).get();
+	}
+	@Override
+	public Project registerNewProject(Project newproject) {
+		newproject = proDAO.save(newproject);
+		return newproject;
+	}
+	@Override
+	public Iterable<Department> listAllDepartments() {
+		System.out.println("listing all department");
+		return deptDAO.findAll();
+	}
+	@Override
+	public Department findByDeptno(int deptno) {
+		// TODO Auto-generated method stub
+		return deptDAO.findById(deptno).get();
+	}
+	@Override
+	public Department registerNewDepartment(Department newDepartment) {
+		newDepartment = deptDAO.save(newDepartment);
+		return newDepartment;
+	}
 
 }
 
